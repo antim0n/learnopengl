@@ -95,9 +95,14 @@ int main()
 
     // vertex data setup
     float vertices[] = {
+        // first triangle
         -0.5f, -0.5f, 0.0f,
+        -0.1f, -0.5f, 0.0f,
+        -0.2f,  0.5f, 0.0f,
+        // second triangle
+        0.1f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
+        0.2f,  0.5f, 0.0f
     };
 
     // vertex array object - draw settings
@@ -130,7 +135,8 @@ int main()
         // draw triangle
         glUseProgram(shaderProgram); // activate -> use for every shader and rendering call
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // glBindVertexArray(0);
 
         // swap buffers and poll IO events
         glfwSwapBuffers(window);

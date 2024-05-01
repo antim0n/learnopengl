@@ -2,6 +2,12 @@
 #include<glad/glad.h> // needed for GLFW include 0_0
 #include<GLFW/glfw3.h>
 
+// OpenGL Mathematics
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -13,9 +19,10 @@ const char* vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "layout (location = 1) in vec3 aColor;\n"
     "out vec3 ourColor;\n"
+    "uniform mat4 transform;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
+    "   gl_Position = transform * vec4(aPos * vec3(1.0, -1.0, 1.0), 1.0);\n"
     "   ourColor = aColor;\n"
     "}\0";
 const char* fragmentShaderSource = "#version 330 core\n"
@@ -144,6 +151,15 @@ int main()
         // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
         // int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor"); <- first define ourColor in the fragment shader
         // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+        // transformation matrix
+        glm::mat4 trans = glm::mat4(1.0f);
+        float transform = 0.1 * glfwGetTime();
+        trans = glm::translate(trans, glm::vec3(transform, transform, 0.0f));
+
+        int vertexTransformLocation = glGetUniformLocation(shaderProgram, "transform");
+        glUseProgram(shaderProgram);
+        glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(trans));
 
         // render triangles
         glBindVertexArray(VAO);
